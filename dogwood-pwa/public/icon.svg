@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0f172a"/>
+  <path d="M128 280 L256 160 L384 280" stroke="#f59e0b" stroke-width="32" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="152" y="280" width="208" height="120" rx="8" fill="#f59e0b" opacity="0.9"/>
+  <rect x="220" y="310" width="72" height="90" rx="6" fill="#0f172a"/>
+  <text x="256" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="48" fill="#f59e0b">DOGWOOD</text>
+</svg>
