@@ -2087,7 +2087,16 @@ export default function RoofingContract() {
 
     return (
       <div style={{ fontFamily:"Arial, Helvetica, sans-serif", color:"#1e293b", padding:"40px 50px", maxWidth:800, margin:"0 auto", fontSize:14, lineHeight:1.5 }}>
-        <style>{`@media print { .no-print { display:none !important; } body { padding:0; margin:0; } } @media screen { body { background:#f1f5f9; } }`}</style>
+        <style>{`
+          @media print {
+            .no-print { display:none !important; }
+            html, body, #root { height:auto !important; overflow:visible !important; margin:0 !important; padding:0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; overflow:visible !important; }
+          }
+          @media screen {
+            body { background:#f1f5f9; }
+          }
+        `}</style>
 
         {/* Print buttons - hidden when printing */}
         <div className="no-print" style={{ display:"flex", gap:12, marginBottom:24 }}>

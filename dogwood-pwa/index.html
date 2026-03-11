@@ -16,6 +16,10 @@
       /* Prevent pull-to-refresh on mobile */
       html { overflow: hidden; height: 100%; }
       body { overflow: auto; height: 100%; }
+      /* Fix for PDF/Print export */
+      @media print {
+        html, body, #root { height: auto !important; overflow: visible !important; }
+      }
     </style>
   </head>
   <body>
