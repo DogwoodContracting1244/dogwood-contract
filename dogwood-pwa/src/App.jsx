@@ -1965,6 +1965,28 @@ export default function RoofingContract() {
   const [pinError, setPinError] = useState("");
   const [pinLoading, setPinLoading] = useState(false);
 
+  const [step, setStep] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [measureData, setMeasureData] = useState({});
+  const [validationError, setValidationError] = useState(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [showPrintView, setShowPrintView] = useState(false);
+  const [data, setData] = useState({
+    firstName:"", lastName:"", address:"", city:"", state:"", zip:"",
+    phone:"", email:"", representative:"",
+    basePrice:"", roofSquares:"", roofSqFt:"", roofPitch:"", wasteFactor:"", eaveFt:"", ridgeFt:"", hipFt:"", valleyFt:"", rakeFt:"", pipeBootCount:"", ventCurrent:"", ventDesired:"", ventRemovalCount:"", ventRidgeFt:"",
+    compUnderlayment:"good", compIceWater:"good", compRidgeCap:"good", compPipeBoots:"good", compStarterStrip:"good",
+    claimType:"none", deductible:"", rcv:"", deductibleCredit:"", deductibleCreditNotes:"",
+    codeUpgrade:"", insuranceEstimateUploaded:false, insuranceCompany:"", claimNumber:"", dateOfLoss:"", insuranceLineItems:"", insApprovedItems:[],
+    roofMaterial:"hdz", roofLayers:"1", roofNotes:"", shingleColor:"", dripEdgeColor:"", insuredShingle:"hdz",
+    gutterType:"", gutterFt:"", gutterGuard:"none", guardOnlyFt:"", guardOnlySize:"5", downspouts:"", downspoutFt:"", miterCount:"",
+    insuredGutterType:"none", insuredGutterGuard:"none", insuredGutterAmount:"", insuredGuardAmount:"",
+    deckingPricePerSheet:"", skylights:[""], skylightPrice:"", noSkylights:true, additionalItems:[], warranty:"standard", depositAmount:"",
+    startDate:"", paymentNotes:"",
+    agreed:false, is65OrOlder:false, ackRightToCancel:false, insAckContractor:false, insAckSupplement:false, insAckPayments:false, customerSig:null, companySig:null, reportUploaded:false,
+  });
+
   async function handleLogin() {
     if (!pinInput.trim()) { setPinError("Please enter your PIN."); return; }
     setPinLoading(true); setPinError("");
@@ -2012,25 +2034,6 @@ export default function RoofingContract() {
     );
   }
 
-  const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const [measureData, setMeasureData] = useState({});
-  const [data, setData] = useState({
-    firstName:"", lastName:"", address:"", city:"", state:"", zip:"",
-    phone:"", email:"", representative:"",
-    basePrice:"", roofSquares:"", roofSqFt:"", roofPitch:"", wasteFactor:"", eaveFt:"", ridgeFt:"", hipFt:"", valleyFt:"", rakeFt:"", pipeBootCount:"", ventCurrent:"", ventDesired:"", ventRemovalCount:"", ventRidgeFt:"",
-    compUnderlayment:"good", compIceWater:"good", compRidgeCap:"good", compPipeBoots:"good", compStarterStrip:"good",
-    claimType:"none", deductible:"", rcv:"", deductibleCredit:"", deductibleCreditNotes:"",
-    codeUpgrade:"", insuranceEstimateUploaded:false, insuranceCompany:"", claimNumber:"", dateOfLoss:"", insuranceLineItems:"", insApprovedItems:[],
-    roofMaterial:"hdz", roofLayers:"1", roofNotes:"", shingleColor:"", dripEdgeColor:"", insuredShingle:"hdz",
-    gutterType:"", gutterFt:"", gutterGuard:"none", guardOnlyFt:"", guardOnlySize:"5", downspouts:"", downspoutFt:"", miterCount:"",
-    insuredGutterType:"none", insuredGutterGuard:"none", insuredGutterAmount:"", insuredGuardAmount:"",
-    deckingPricePerSheet:"", skylights:[""], skylightPrice:"", noSkylights:true, additionalItems:[], warranty:"standard", depositAmount:"",
-    startDate:"", paymentNotes:"",
-    agreed:false, is65OrOlder:false, ackRightToCancel:false, insAckContractor:false, insAckSupplement:false, insAckPayments:false, customerSig:null, companySig:null, reportUploaded:false,
-  });
-
   const stepComponents = [
     <StepCustomerInfo key={0} data={data} setData={setData} />,
     <StepMeasurements key={1} data={data} setData={setData} measureData={measureData} setMeasureData={setMeasureData} />,
@@ -2058,8 +2061,6 @@ export default function RoofingContract() {
     if (config.clearMeasure) setMeasureData({});
     setShowClearConfirm(false);
   }
-
-  const [validationError, setValidationError] = useState(null);
 
   function validateStep(s) {
     switch(s) {
@@ -2125,9 +2126,6 @@ export default function RoofingContract() {
   const insAcksComplete = data.claimType !== "insurance" || (data.insAckContractor && data.insAckSupplement && data.insAckPayments);
   const canSubmit = data.agreed && data.ackRightToCancel && data.customerSig && data.companySig && insAcksComplete;
   const t = calcTotals(data);
-
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [showPrintView, setShowPrintView] = useState(false);
 
   if (submitted && showPrintView) {
     const upgrade = ROOFING_UPGRADES.find(r => r.id === data.roofMaterial);
