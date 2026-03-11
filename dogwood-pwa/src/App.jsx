@@ -257,7 +257,7 @@ function StepMeasurements({ data, setData, measureData, setMeasureData }) {
     setUploading(true); setError(null);
     try {
       const base64Data = await fileToBase64(file);
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
@@ -443,7 +443,7 @@ function InsuranceUpload({ data, setData }) {
     setUploading(true); setError(null);
     try {
       const base64Data = await fileToBase64(file);
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
@@ -1960,6 +1960,58 @@ function generateScopeOfWork(data) {
 
 // ─── Main App ───
 export default function RoofingContract() {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState("");
+  const [pinLoading, setPinLoading] = useState(false);
+
+  async function handleLogin() {
+    if (!pinInput.trim()) { setPinError("Please enter your PIN."); return; }
+    setPinLoading(true); setPinError("");
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: pinInput.trim() }),
+      });
+      if (res.ok) {
+        setAuthenticated(true);
+      } else {
+        setPinError("Invalid PIN. Please try again.");
+      }
+    } catch {
+      setPinError("Connection error. Please try again.");
+    } finally { setPinLoading(false); }
+  }
+
+  if (!authenticated) {
+    return (
+      <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:`linear-gradient(160deg, #0f172a 0%, #1e293b 100%)`, fontFamily:"'DM Sans', sans-serif" }}>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+        <div style={{ background:"#fff", borderRadius:16, padding:"40px 36px", maxWidth:380, width:"90%", boxShadow:"0 20px 60px rgba(0,0,0,0.3)", textAlign:"center" }}>
+          <div style={{ width:60, height:60, borderRadius:"50%", background:"#f59e0b", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 9v11a2 2 0 002 2h14a2 2 0 002-2V9l-9-7z" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+          <div style={{ fontSize:24, fontWeight:800, color:"#0f172a", marginBottom:4, fontFamily:"'Playfair Display', serif" }}>Dogwood Exteriors</div>
+          <div style={{ fontSize:12, color:"#64748b", letterSpacing:1.5, marginBottom:24 }}>CONTRACT APP</div>
+          <div style={{ textAlign:"left", marginBottom:16 }}>
+            <label style={{ display:"block", fontSize:13, fontWeight:600, color:"#475569", marginBottom:5 }}>Company PIN</label>
+            <input type="password" inputMode="numeric" value={pinInput} onChange={e => setPinInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              placeholder="Enter PIN"
+              style={{ width:"100%", padding:"14px 16px", fontSize:18, fontWeight:700, border:"1.5px solid #cbd5e1", borderRadius:10, outline:"none", textAlign:"center", letterSpacing:8, fontFamily:"'DM Sans', sans-serif", boxSizing:"border-box" }}
+              autoFocus />
+          </div>
+          {pinError && <div style={{ background:"#fef2f2", border:"1px solid #fecaca", borderRadius:8, padding:"10px 14px", marginBottom:14, fontSize:13, color:"#ef4444", fontWeight:600 }}>{pinError}</div>}
+          <button onClick={handleLogin} disabled={pinLoading}
+            style={{ width:"100%", padding:"14px", fontSize:15, fontWeight:700, color:"#fff", background: pinLoading ? "#94a3b8" : "linear-gradient(135deg, #f59e0b, #d97706)", border:"none", borderRadius:10, cursor: pinLoading ? "wait" : "pointer", fontFamily:"'DM Sans', sans-serif", boxShadow:"0 2px 8px rgba(245,158,11,0.3)" }}>
+            {pinLoading ? "Verifying..." : "Sign In"}
+          </button>
+          <div style={{ marginTop:16, fontSize:11, color:"#94a3b8" }}>Authorized Dogwood Exteriors representatives only</div>
+        </div>
+      </div>
+    );
+  }
+
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
