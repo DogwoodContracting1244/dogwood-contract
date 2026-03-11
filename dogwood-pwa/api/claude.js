@@ -1,5 +1,12 @@
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '20mb',
+    },
+  },
+};
+
 export default async function handler(req, res) {
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -23,12 +30,13 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('Anthropic API error:', response.status, data);
       return res.status(response.status).json(data);
     }
 
     return res.status(200).json(data);
   } catch (error) {
-    console.error('Proxy error:', error);
-    return res.status(500).json({ error: 'Failed to reach Anthropic API' });
+    console.error('Proxy error:', error.message);
+    return res.status(500).json({ error: 'Failed to reach Anthropic API', details: error.message });
   }
 }

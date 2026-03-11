@@ -492,7 +492,7 @@ Rules:
       setData(prev => ({ ...prev, ...updates }));
     } catch (err) {
       console.error(err);
-      setError("Failed to parse the insurance estimate. Please verify it's a valid insurance PDF.");
+      setError("Failed to parse the insurance estimate: " + err.message);
     } finally { setUploading(false); }
   }, [setData]);
 
