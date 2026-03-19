@@ -258,7 +258,7 @@ function StepMeasurements({ data, setData, measureData, setMeasureData }) {
     try {
       const base64Data = await fileToBase64(file);
       const response = await fetch("/api/claude", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json", "x-app-pin": sessionStorage.getItem("dw_pin") || "" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
           messages: [{ role: "user", content: [
@@ -444,7 +444,7 @@ function InsuranceUpload({ data, setData }) {
     try {
       const base64Data = await fileToBase64(file);
       const response = await fetch("/api/claude", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json", "x-app-pin": sessionStorage.getItem("dw_pin") || "" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
           messages: [{ role: "user", content: [
@@ -1996,9 +1996,11 @@ export default function RoofingContract() {
         body: JSON.stringify({ pin: pinInput.trim() }),
       });
       if (res.ok) {
+        sessionStorage.setItem('dw_pin', pinInput.trim());
         setAuthenticated(true);
       } else {
-        setPinError("Invalid PIN. Please try again.");
+        const errData = await res.json().catch(() => ({}));
+        setPinError(errData.error || "Invalid PIN. Please try again.");
       }
     } catch {
       setPinError("Connection error. Please try again.");
