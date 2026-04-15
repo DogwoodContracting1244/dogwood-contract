@@ -127,8 +127,8 @@ const ADDONS = []; // legacy — kept for compatibility
 
 const WARRANTY_OPTIONS = [
   { id: "standard", label: "5-Year Workmanship Warranty", subtitle: "Included with every Dogwood Exteriors roof.", perSq: 0, included: true },
-  { id: "gold", label: "Dogwood Gold Warranty", subtitle: "7-Year Workmanship Warranty — extended peace of mind.", perSq: 75 },
-  { id: "platinum", label: "Dogwood Platinum Warranty", subtitle: "10-Year Workmanship Warranty — our best protection.", perSq: 125 },
+  { id: "gold", label: "Dogwood Gold Warranty", subtitle: "7-Year Workmanship Warranty — extended peace of mind.", perSq: 40 },
+  { id: "platinum", label: "Dogwood Platinum Warranty", subtitle: "10-Year Workmanship Warranty — our best protection.", perSq: 60 },
 ];
 
 const PAYMENT_TERMS = []; // legacy — kept for compatibility
